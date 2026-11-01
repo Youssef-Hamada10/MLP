@@ -14,7 +14,7 @@ The goal is to classify each penguin into one of three species:
 
 ## 2. Dataset
 
-The project uses the `penguins_pr.csv` dataset, which contains 150 samples.
+The project uses the `penguins.csv` dataset, which contains 150 samples.
 
 Each species has 50 samples.
 
