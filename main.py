@@ -6,20 +6,12 @@ from mlp import MLP
 from evaluation import Evaluator
 from visualization import plot_mlp_decision_boundary
 
-
-# ==========================================
-# 1. Load and preprocess dataset
-# ==========================================
-
+#Load and preprocess dataset
 df = load_csv("penguins.csv")
 
 data = preprocess_data(df)
 
-
-# ==========================================
-# 2. Prepare training and testing data
-# ==========================================
-
+#Prepare training and testing data
 X_train = data["X_train_scaled"]
 y_train = data["y_train_encoded"]
 
@@ -32,13 +24,8 @@ print("Testing samples:", len(X_test))
 print("X_train shape:", X_train.shape)
 print("y_train shape:", y_train.shape)
 
-
-# ==========================================
-# 3. Model training
-# ==========================================
-
+#Model training
 np.random.seed(42)
-
 model = MLP(
     hidden_layers=[8, 6],
     learning_rate=0.01,
@@ -46,23 +33,13 @@ model = MLP(
     use_bias=False,
     activation_type="sigmoid"
 )
-
 loss_history = model.train(X_train, y_train)
 
-
-# ==========================================
-# 4. Testing
-# ==========================================
-
+#Testing
 y_pred = model.predict(X_test)
 
-
-# ==========================================
-# 5. Evaluation
-# ==========================================
-
+#Evaluation
 evaluator = Evaluator()
-
 cm, accuracy = evaluator.conf_matrix(
     y_test_labels,
     y_pred,
@@ -74,11 +51,7 @@ print(np.array(cm))
 
 print("\nOverall Accuracy:", accuracy * 100, "%")
 
-
-# ==========================================
-# 6. Store training results
-# ==========================================
-
+#Store training results
 training_results = {
     "model": model,
     "X_train": data["X_train"],
@@ -91,11 +64,7 @@ training_results = {
     "std": data["std"]
 }
 
-
-# ==========================================
-# 7. Visualization
-# ==========================================
-
+#Visualization
 fig = plot_mlp_decision_boundary(
     model=model,
     training_results=training_results,
@@ -103,5 +72,4 @@ fig = plot_mlp_decision_boundary(
     feature2="FlipperLength",
     scale="Standardized"
 )
-
 plt.show()

@@ -34,11 +34,7 @@ def split_data(X, y, train_per_class=30):
 
     for label in (0, 1, 2):
         indices = np.flatnonzero(y == label)
-        if len(indices) != 50:
-            raise ValueError(
-                f"Each class must have 50 samples, "
-                f"but class {label} has {len(indices)}."
-            )
+
         np.random.shuffle(indices)
         train_indices.extend(indices[:train_per_class])
         test_indices.extend(indices[train_per_class:])
@@ -54,19 +50,6 @@ def split_data(X, y, train_per_class=30):
     )
 
 def preprocess_data(df):
-    #Validation on dataset
-    if len(df) != 150:
-        raise ValueError("Dataset must contain exactly 150 samples.")
-
-    if df['Species'].isna().any():
-        raise ValueError("Species column contains missing values.")
-
-    if set(df['Species'].unique()) != set(SPECIES_MAPPING.keys()):
-        raise ValueError("Dataset must contain the three expected species.")
-
-    if not (df['Species'].value_counts() == 50).all():
-        raise ValueError("Each species must contain exactly 50 samples.")
-
     #Seperate the target column
     X = df.drop("Species", axis=1)
     y = df["Species"]
@@ -78,11 +61,12 @@ def preprocess_data(df):
 
     #Encode originLocation Column
     X['OriginLocation'] = X['OriginLocation'].map(ORIGIN_LOCATIONS)
+    #X = pd.get_dummies(X, columns=['OriginLocation'], dtype=int)
 
     #Encode species Column
     y = y.map(SPECIES_MAPPING)
 
-    #Split the dataset 
+    #Split the dataset
     X_train, X_test, y_train, y_test = split_data(X, y, 30)
 
     #Convert the data from dataframe to arrays
