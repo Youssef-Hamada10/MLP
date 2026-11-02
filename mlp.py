@@ -16,11 +16,11 @@ class MLP:
 
     for i in range(len(self.network_archi) - 1):
       #init weights list
-      w = np.random.randn(self.network_archi[i], self.network_archi[i + 1])
+      w = np.random.randn(self.network_archi[i], self.network_archi[i + 1]) * 0.1
       self.weight_list.append(w)
       #init bias list
       if self.use_bias:
-        b = np.random.randn(1, self.network_archi[i + 1])
+        b = np.random.randn(1, self.network_archi[i + 1]) * 0.1
       else:
         b = np.zeros((1, self.network_archi[i + 1]))
       self.bias_list.append(b)
