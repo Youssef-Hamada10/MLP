@@ -27,11 +27,11 @@ print("y_train shape:", y_train.shape)
 #Model training
 np.random.seed(42)
 model = MLP(
-    hidden_layers=[8, 6],
-    learning_rate=0.01,
+    hidden_layers=[10],
+    learning_rate=0.03,
     epochs=1000,
     use_bias=False,
-    activation_type="sigmoid"
+    activation_type="tanh"
 )
 loss_history = model.train(X_train, y_train)
 

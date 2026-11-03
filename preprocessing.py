@@ -54,11 +54,6 @@ def preprocess_data(df):
     X = df.drop("Species", axis=1)
     y = df["Species"]
 
-    #Fill missing values in numerical columns
-    for col in X:
-        if col != 'OriginLocation':
-            X[col] = X[col].fillna(X[col].mean())
-
     #Encode originLocation Column
     X['OriginLocation'] = X['OriginLocation'].map(ORIGIN_LOCATIONS)
     #X = pd.get_dummies(X, columns=['OriginLocation'], dtype=int)
@@ -68,6 +63,14 @@ def preprocess_data(df):
 
     #Split the dataset
     X_train, X_test, y_train, y_test = split_data(X, y, 30)
+
+    #Fill missing values in numerical columns
+    for col in X_train:
+        if col != 'OriginLocation':
+            X_train[col] = X_train[col].fillna(X[col].mean())
+    for col in X_test:
+        if col != 'OriginLocation':
+            X_test[col] = X_test[col].fillna(X[col].mean())
 
     #Convert the data from dataframe to arrays
     X_train = X_train.to_numpy(dtype=float)
@@ -81,22 +84,20 @@ def preprocess_data(df):
     X_test_scaled = (X_test - mean) / std
 
     #One hot encoding
-    y_train_encoded = np.eye(3)[y_train]
+    y_train_int = y_train.to_numpy(dtype=int)
+    y_test_int = y_test.to_numpy(dtype=int)
+    y_train_encoded = np.eye(3)[y_train_int]
+    y_test_encoded = np.eye(3)[y_test_int]
 
     return {
         "X_train": X_train,
         "X_test": X_test,
         "X_train_scaled": X_train_scaled,
         "X_test_scaled": X_test_scaled,
-        "y_train": y_train,
-        "y_test": y_test,
+        "y_train": y_train_int,
+        "y_test": y_test_int,
         "y_train_encoded": y_train_encoded,
+        "y_test_encoded": y_test_encoded,
         "mean": mean,
         "std": std
     }
-
-
-
-
-
-
