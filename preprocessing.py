@@ -49,6 +49,10 @@ def split_data(X, y, train_per_class=30):
         y.iloc[test_indices]
     )
 
+def fill_group(s):
+    valid = s.dropna().to_numpy(dtype=float)
+    return s.fillna(np.mean(valid))
+
 def preprocess_data(df):
     #Seperate the target column
     X = df.drop("Species", axis=1)
@@ -65,12 +69,11 @@ def preprocess_data(df):
     X_train, X_test, y_train, y_test = split_data(X, y, 30)
 
     #Fill missing values in numerical columns
-    for col in X_train:
+    for col in X_train.columns:
         if col != 'OriginLocation':
-            X_train[col] = X_train[col].fillna(X[col].mean())
-    for col in X_test:
-        if col != 'OriginLocation':
-            X_test[col] = X_test[col].fillna(X[col].mean())
+            X_filled = X.groupby('OriginLocation')[col].transform(fill_group)
+            X_train[col] = X_train[col].fillna(X_filled.loc[X_train.index])
+            X_test[col]  = X_test[col].fillna(X_filled.loc[X_test.index])
 
     #Convert the data from dataframe to arrays
     X_train = X_train.to_numpy(dtype=float)
